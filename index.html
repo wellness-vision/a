@@ -1,32 +1,34 @@
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Modelo 3D | Visor</title>
-<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.1.0/model-viewer.min.js"></script>
-<style>
-*{box-sizing:border-box}html,body{height:100%;margin:0;font-family:Arial,Helvetica,sans-serif;background:#f8f8f7;color:#242424}
-main{height:100dvh;display:flex;flex-direction:column}.top{padding:18px 22px 10px}.top h1{font-size:19px;margin:0 0 5px}.top p{font-size:13px;color:#666;margin:0}
-model-viewer{display:block;width:100%;flex:1;min-height:250px;background:#f8f8f7;--poster-color:#f8f8f7}
-#error{display:none;margin:12px 20px;padding:14px;border:1px solid #d7c5b6;border-radius:8px;background:#fff8f1;font-size:13px;line-height:1.5}
-footer{text-align:center;font-size:12px;color:#777;padding:10px 12px 16px}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <meta name="description" content="Visor interactivo de un modelo 3D GLB.">
+  <title>Visor 3D</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.1.0/dist/model-viewer.min.js"></script>
 </head>
 <body>
-<main>
-<header class="top"><h1>Modelo 3D</h1><p>Arrastra para girar · Rueda o pellizca para acercar</p></header>
-<div id="error" role="alert"></div>
-<model-viewer id="viewer" src="./modelo.glb" alt="Modelo 3D interactivo" camera-controls auto-rotate auto-rotate-delay="3500" interaction-prompt="auto" shadow-intensity="0.7" environment-image="neutral" exposure="1" loading="eager" reveal="auto"></model-viewer>
-<footer>Visualización 3D interactiva</footer>
-</main>
-<script>
-const errorBox=document.getElementById('error');
-function showError(message){errorBox.style.display='block';errorBox.textContent=message;}
-if(location.protocol==='file:')showError('Has abierto el HTML directamente desde tu ordenador. Algunos navegadores bloquean así la carga del modelo. Sube index.html y modelo.glb juntos a la raíz de tu repositorio y abre la URL de GitHub Pages.');
-const viewer=document.getElementById('viewer');
-viewer.addEventListener('error',event=>showError('No se ha podido cargar modelo.glb. Comprueba que index.html y modelo.glb están en la misma carpeta y que el nombre del archivo coincide exactamente.'));
-viewer.addEventListener('load',()=>{if(location.protocol!=='file:')errorBox.style.display='none';});
-</script>
+  <main class="shell">
+    <header class="topbar">
+      <div><div class="eyebrow">VISUALIZACIÓN INTERACTIVA</div><h1>Visor 3D</h1></div>
+      <span class="file-tag">GLB</span>
+    </header>
+    <section class="viewer-wrap" aria-label="Visor del modelo 3D">
+      <model-viewer id="viewer" src="models/modelo.glb" alt="Modelo tridimensional interactivo" camera-controls touch-action="pan-y" shadow-intensity="0.65" exposure="1" tone-mapping="neutral" environment-image="neutral" interaction-prompt="auto" loading="eager" reveal="auto">
+        <div class="loading" slot="poster">Cargando modelo 3D…</div>
+        <div class="progress-track" slot="progress-bar"><div id="progress" class="progress-fill"></div></div>
+      </model-viewer>
+      <div id="error" class="error" role="alert" hidden>No se pudo cargar el modelo. Comprueba que <code>models/modelo.glb</code> existe y abre la página con un servidor web o desde GitHub Pages.</div>
+      <div class="viewer-actions">
+        <button type="button" id="reset" aria-label="Restablecer cámara">⟲ <span>Restablecer vista</span></button>
+        <button type="button" id="rotate" aria-pressed="false">↻ <span>Giro automático: no</span></button>
+        <button type="button" id="fullscreen">⛶ <span>Pantalla completa</span></button>
+      </div>
+    </section>
+    <footer><span>Arrastra para girar · Rueda o pellizca para acercar · Botón derecho para desplazar</span><span>Modelo 3D interactivo</span></footer>
+  </main>
+  <script src="app.js" defer></script>
 </body>
 </html>
